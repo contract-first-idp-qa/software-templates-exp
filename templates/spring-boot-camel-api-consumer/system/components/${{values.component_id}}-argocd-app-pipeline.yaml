@@ -1,24 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ${{ values.component_id }}-prod
+  name: ${{ values.component_id }}-pipeline
   namespace: openshift-gitops
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/contract-first-idp-qa/${{ values.component_id }}
+    repoURL: https://github.com/contract-first-idp/developer-charts
     targetRevision: HEAD
-    path: .helm
+    path: spring-boot-pipeline
     helm:
-      values: | 
-        image: 
-          repository: image-registry.openshift-image-registry.svc:5000/${{values.application.split("/")[1]}}-prod/${{ values.component_id }}
-          tag: latest
+      values: |
+        domain: contract-first-idp
+        system: ${{values.application.split("/")[1]}}
+        component: ${{ values.component_id }}
   destination:
     server: https://kubernetes.default.svc
-    namespace: ${{values.application.split("/")[1]}}-prod
+    namespace: ${{values.application.split("/")[1]}}-build
   syncPolicy:
     automated: 
       prune: true

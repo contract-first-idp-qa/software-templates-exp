@@ -80,7 +80,7 @@ spec:
           java_group_name: ${{ paramaters.java_group_name }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          destination: https://github.com/contract-first-idp-qa/${{ parameters.component_id }}
+          destination: https://github.com/contract-first-idp-qa/${{ parameters.application.split("/")[1] }}-${{ parameters.component_id }}-service
           application: ${{ parameters.application }}
           api_id: ${{ parameters.api.split("/")[1] }}
 
@@ -90,7 +90,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.component_id }}
-        repoUrl: github.com?repo=${{ parameters.component_id }}&owner=contract-first-idp-qa
+        repoUrl: github.com?repo=${{ parameters.application.split("/")[1] }}-${{ parameters.component_id }}-service&owner=contract-first-idp-qa
         repoVisibility: public
         defaultBranch: main
         deleteBranchOnMerge: true
@@ -127,11 +127,11 @@ spec:
       name: Open PR to System
       action: publish:github:pull-request
       input:
-        repoUrl: github.com?repo=${{ parameters.application.split("/")[1] }}-gitops&owner=contract-first-idp-qa
-        branchName: ${{ parameters.component_id }}
-        title: argocd apps for ${{ parameters.component_id }}
-        description: argocd apps ${{ parameters.component_id }}
-        sourcePath: ./tenant-gitops  
+        repoUrl: github.com?repo=${{ parameters.application.split("/")[1] }}-system&owner=contract-first-idp-qa
+        branchName: ${{ parameters.component_id }}-component
+        title: add ${{ parameters.component_id }} component
+        description: add ${{ parameters.component_id }} component
+        sourcePath: ./system-gitops
 
   output:
     links:
